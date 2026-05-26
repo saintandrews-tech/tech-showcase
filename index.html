@@ -389,144 +389,27 @@
 </footer>
 
 <script>
-// ── PROJECT DATA ──────────────────────────────────────────────────────────────
-// To add or update projects, edit this array.
-// links: array of {label, url} objects — up to 3 per project. Empty array = no links shown.
-// accent: sets the left color bar — use any CSS color value.
-const PROJECTS = [
-  {
-    id: 1,
-    grade: '7th Grade', gradeGroup: '7th Grade',
-    subject: 'Science', bgClass: 'bg-science', icon: '🔬',
-    accent: '#68d2df',
-    title: 'Interactive Animal Cell Models',
-    description: 'Students built 3D animal cell models and integrated Makey Makeys so that touching each organelle completes an electrical circuit and triggers an image, description, and sound on screen.',
-    teacher: 'Science / Frolich',
-    tools: ['Makey Makey', 'Scratch'],
-    iste: ['Creative Communicator (1.6a)'], csta: ['2-CS-02'], links: []
-  },
-  {
-    id: 2,
-    grade: '6th–8th Grade', gradeGroup: '8th Grade',
-    subject: 'PE & Dance', bgClass: 'bg-pe', icon: '🎬',
-    accent: '#6ba539',
-    title: 'Rik Rok Dance Videos',
-    description: 'Middle schoolers choreographed, filmed, and edited dance videos incorporating green screen technology and iMovie — combining physical education, creativity, and digital media production.',
-    teacher: 'Carlson-Bowen / Frolich',
-    tools: ['iMovie', 'Green Screen'],
-    iste: ['Creative Communicator (1.6b, 1.6c)'], csta: [], links: []
-  },
-  {
-    id: 3,
-    grade: '5th Grade', gradeGroup: '5th Grade',
-    subject: 'Science', bgClass: 'bg-science', icon: '🌿',
-    accent: '#68d2df',
-    title: 'Interactive Nature Trail',
-    description: 'Fifth graders created a digital interactive nature trail guide, researching local ecosystems and building multimedia presentations to share with the school community.',
-    teacher: 'Truran / Frolich',
-    tools: ['Adobe Express', 'Google Slides'],
-    iste: ['Knowledge Constructor (1.3c)', 'Creative Communicator (1.6a)'], csta: [], links: []
-  },
-  {
-    id: 4,
-    grade: '7th Grade', gradeGroup: '7th Grade',
-    subject: 'Computer Science', bgClass: 'bg-cs', icon: '🟦',
-    accent: '#141b4d',
-    title: 'Pixel Art with Conditional Formatting',
-    description: 'Students used Google Sheets conditional formatting rules to create pixel art, exploring computational thinking and algorithmic logic through a visual, creative medium.',
-    teacher: 'Frolich',
-    tools: ['Google Sheets'],
-    iste: ['Computational Thinker (1.5a)'], csta: ['2-Algorithms & Programming-01'], links: []
-  },
-  {
-    id: 5,
-    grade: '8th Grade', gradeGroup: '8th Grade',
-    subject: 'English Language Arts', bgClass: 'bg-ela', icon: '🎙️',
-    accent: '#e04e39',
-    title: 'Argument Essay to Podcast',
-    description: 'Eighth graders transformed written argument essays into produced audio podcasts using GarageBand, developing both writing craft and audio storytelling skills.',
-    teacher: 'Smith / Frolich',
-    tools: ['GarageBand', 'Google Drive'],
-    iste: ['Creative Communicator (1.6b)'], csta: [], links: []
-  },
-  {
-    id: 6,
-    grade: '8th Grade', gradeGroup: '8th Grade',
-    subject: 'Social Studies', bgClass: 'bg-social', icon: '🎞️',
-    accent: '#6ba539',
-    title: 'Civil Rights Presentations',
-    description: 'Students created multimedia presentations exploring civil rights history, integrating primary sources, images, and narration to share research with an authentic audience.',
-    teacher: 'Stacey / Frolich',
-    tools: ['Google Slides', 'Canva'],
-    iste: ['Knowledge Constructor (1.3d)', 'Creative Communicator (1.6a)'], csta: [], links: []
-  },
-  {
-    id: 7,
-    grade: '3rd–5th Grade', gradeGroup: '3rd Grade',
-    subject: 'Science', bgClass: 'bg-science', icon: '🤖',
-    accent: '#68d2df',
-    title: 'Ozobot Coding Challenges',
-    description: 'Students programmed Ozobot Evos using color codes and OzoBlockly, exploring sequencing, loops, and problem-solving through hands-on robotics activities.',
-    teacher: 'Truran / Frolich',
-    tools: ['Ozobot', 'OzoBlockly'],
-    iste: ['Computational Thinker (1.5b, 1.5c)'], csta: ['1B-Algorithms & Programming-03'], links: []
-  },
-  {
-    id: 8,
-    grade: '2nd Grade', gradeGroup: '2nd Grade',
-    subject: 'Religion', bgClass: 'bg-rel', icon: '✏️',
-    accent: '#ffc72c',
-    title: 'Sacred Space Designs',
-    description: 'Second graders designed their own "sacred space" using Canva for Education, reflecting on what makes a place peaceful and meaningful while building digital design skills.',
-    teacher: 'Ashlock / Frolich',
-    tools: ['Canva for Education'],
-    iste: ['Creative Communicator (1.6a, 1.6d)'], csta: [], links: []
-  },
-  {
-    id: 9,
-    grade: '2nd Grade', gradeGroup: '2nd Grade',
-    subject: 'Social Studies', bgClass: 'bg-social', icon: '🎬',
-    accent: '#6ba539',
-    title: 'Heritage Project iMovies',
-    description: 'Students interviewed family members and created short iMovie documentaries celebrating their cultural heritage — building storytelling, interviewing, and video production skills.',
-    teacher: 'Doshi / Frolich',
-    tools: ['iMovie'],
-    iste: ['Creative Communicator (1.6b)', 'Global Collaborator (1.7a)'], csta: [], links: []
-  },
-  {
-    id: 10,
-    grade: '6th–7th Grade', gradeGroup: '6th Grade',
-    subject: 'CS / Spanish', bgClass: 'bg-cs', icon: '🐱',
-    accent: '#141b4d',
-    title: 'Scratch Projects in Spanish',
-    description: 'Students in Spanish class created interactive Scratch projects to demonstrate language learning, integrating programming with world language skills in a cross-curricular collaboration.',
-    teacher: 'Santillan-Lopez / Frolich',
-    tools: ['Scratch'],
-    iste: ['Innovative Designer (1.4a)', 'Computational Thinker (1.5b)'], csta: ['2-Algorithms & Programming-01'], links: []
-  },
-  {
-    id: 11,
-    grade: '8th Grade', gradeGroup: '8th Grade',
-    subject: 'History', bgClass: 'bg-social', icon: '📊',
-    accent: '#6ba539',
-    title: 'Industrialization Data Timeline',
-    description: 'Students built interactive timelines documenting the Industrial Revolution, using Google Sheets to visualize economic data and Slides to present historical analysis.',
-    teacher: 'Stacey / Frolich',
-    tools: ['Google Sheets', 'Google Slides'],
-    iste: ['Knowledge Constructor (1.3c)'], csta: ['2-Data & Analysis-07'], links: []
-  },
-  {
-    id: 12,
-    grade: '4th Grade', gradeGroup: '4th Grade',
-    subject: 'Social Studies', bgClass: 'bg-social', icon: '🌎',
-    accent: '#6ba539',
-    title: 'Native American Tribes Presentations',
-    description: 'Fourth graders researched Native American tribes and created Google Slides presentations to share their learning, building research and digital storytelling skills.',
-    teacher: 'Lyon / Frolich',
-    tools: ['Google Slides'],
-    iste: ['Knowledge Constructor (1.3c)', 'Creative Communicator (1.6a)'], csta: [], links: []
-  }
-];
+// ── LIVE DATA FROM GOOGLE SHEETS ─────────────────────────────────────────────
+// Replace this URL with your deployed Apps Script web app URL after deployment
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwg4lxMBVQ5U4TXpW0h_v9QWmcqqGveRLDJaTSzs3zVXFFtlzzG5E8Y5U_Yp3-EFz1kog/exec';
+
+var PROJECTS = [];
+
+function loadProjects() {
+  var list = document.getElementById('project-list');
+  list.innerHTML = '<div class="empty-state" style="color:var(--text-muted);">Loading projects...</div>';
+
+  fetch(APPS_SCRIPT_URL)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      PROJECTS = data;
+      renderProjects();
+    })
+    .catch(function(err) {
+      console.error('Could not load projects:', err);
+      list.innerHTML = '<div class="empty-state">Could not load projects. Check the Apps Script URL.</div>';
+    });
+}
 
 // ── GRADE GROUPINGS ───────────────────────────────────────────────────────────
 const GRADE_GROUPS = {
@@ -601,7 +484,7 @@ function renderProjects() {
   `).join('');
 }
 
-renderProjects();
+loadProjects();
 </script>
 
 <!-- ── MODAL ── -->
