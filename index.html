@@ -451,14 +451,26 @@ function shortIste(s) {
   return parts.join(', ');
 }
 function shortCsta(s) {
-  // "1B-Algorithms & Programming-03" → "CSTA 1B-AP-03"
-  // "2-Data & Analysis-07" → "CSTA 2-DA-07"
   return 'CSTA ' + s
     .replace('Algorithms & Programming', 'AP')
     .replace('Data & Analysis', 'DA')
     .replace('Computing Systems', 'CS')
     .replace('Networks & the Internet', 'NI')
     .replace('Impacts of Computing', 'IC');
+}
+function expandCsta(s) {
+  // Each CSTA standard is already a single code — just shorten and wrap
+  // But handle comma-separated ones just in case: "1B-AP-03, 1B-AP-04"
+  var parts = s.split(/,\s*/);
+  return parts.map(function(part) { return shortCsta(part.trim()); });
+}
+function driveUrl(url) {
+  // Convert Google Drive sharing URL to direct image URL
+  // https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+  // → https://drive.google.com/uc?export=view&id=FILE_ID
+  var m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (m) return 'https://drive.google.com/uc?export=view&id=' + m[1];
+  return url;
 }
 function renderProjects() {
   const list = document.getElementById('project-list');
@@ -474,7 +486,7 @@ function renderProjects() {
 
   list.innerHTML = filtered.map(p => `
     <div class="project-row" style="--row-accent: ${p.accent}">
-      <div class="row-thumb ${p.bgClass}" onclick="openModal(PROJECTS.find(x=>x.id===${p.id}))" style="cursor:pointer;" title="View project links">${p.imageUrl ? `<img src="${p.imageUrl}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:0;">` : p.icon}</div>
+      <div class="row-thumb ${p.bgClass}" onclick="openModal(PROJECTS.find(x=>x.id===${p.id}))" style="cursor:pointer;" title="View project links">${p.imageUrl ? `<img src="${driveUrl(p.imageUrl)}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:0;" onerror="this.style.display='none'">` : p.icon}</div>
       <div class="row-details">
         <div class="row-main">
           <div class="row-meta">
@@ -486,7 +498,7 @@ function renderProjects() {
           <div class="row-description">${p.description}</div>
           <div class="row-tags">
             ${p.iste.flatMap(s => expandIste(s)).map(code => `<span class="std-tag std-iste">${code}</span>`).join('')}
-            ${p.csta.map(s => `<span class="std-tag std-csta">${shortCsta(s)}</span>`).join('')}
+            ${p.csta.flatMap(s => expandCsta(s)).map(code => `<span class="std-tag std-csta">${code}</span>`).join('')}
           </div>
         </div>
       </div>
