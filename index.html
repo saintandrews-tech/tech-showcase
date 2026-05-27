@@ -413,8 +413,8 @@ function loadProjects() {
 
 // ── GRADE GROUPINGS ───────────────────────────────────────────────────────────
 const GRADE_GROUPS = {
-  'Early Years':   ['PreK', 'TK', 'Kindergarten', '1st Grade'],
-  'Lower School':  ['2nd Grade', '3rd Grade', '4th Grade', '5th Grade'],
+  'Early Years':   ['PreK', 'TK', 'Kindergarten', '1st Grade', '2nd Grade'],
+  'Lower School':  ['3rd Grade', '4th Grade', '5th Grade'],
   'Middle School': ['6th Grade', '7th Grade', '8th Grade']
 };
 
@@ -431,8 +431,12 @@ function filterGrade(grade, btn) {
 
 function matchesGrade(p, grade) {
   if (grade === 'all') return true;
-  if (GRADE_GROUPS[grade]) return GRADE_GROUPS[grade].includes(p.gradeGroup);
-  return p.gradeGroup === grade || p.grade.includes(grade.replace(' Grade', '').trim());
+  // Nav band buttons pass group names like 'Early Years'
+  if (GRADE_GROUPS[grade]) return p.gradeGroup === grade;
+  // Filter bar buttons pass individual grades like '7th Grade'
+  var g = p.grade.toLowerCase();
+  var target = grade.toLowerCase().replace(' grade', '').trim();
+  return g.indexOf(target) !== -1;
 }
 
 function expandIste(s) {
@@ -465,11 +469,12 @@ function expandCsta(s) {
   return parts.map(function(part) { return shortCsta(part.trim()); });
 }
 function driveUrl(url) {
-  // Convert Google Drive sharing URL to direct image URL
-  // https://drive.google.com/file/d/FILE_ID/view?usp=sharing
-  // → https://drive.google.com/uc?export=view&id=FILE_ID
+  // Convert Google Drive sharing URL to thumbnail embed URL (more reliable)
+  // https://drive.google.com/file/d/FILE_ID/view → 
+  // https://lh3.googleusercontent.com/d/FILE_ID  (works for images shared publicly)
   var m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (m) return 'https://drive.google.com/uc?export=view&id=' + m[1];
+  if (m) return 'https://lh3.googleusercontent.com/d/' + m[1];
+  // Already a direct URL or other format — return as-is
   return url;
 }
 function renderProjects() {
