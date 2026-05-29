@@ -399,7 +399,7 @@ function loadProjects() {
   var list = document.getElementById('project-list');
   list.innerHTML = '<div class="empty-state" style="color:var(--text-muted);">Loading projects...</div>';
 
-  fetch(APPS_SCRIPT_URL)
+  fetch(APPS_SCRIPT_URL + '?t=' + Date.now())
     .then(function(r) { return r.json(); })
     .then(function(data) {
       PROJECTS = data;
