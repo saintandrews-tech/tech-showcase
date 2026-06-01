@@ -71,7 +71,7 @@
     letter-spacing: 0.08em; text-transform: uppercase;
     white-space: nowrap;
   }
-  nav { display: flex; }
+  nav { display: flex; align-items: center; }
   nav a {
     color: rgba(255,255,255,0.7);
     text-decoration: none;
@@ -86,6 +86,55 @@
     color: var(--white);
     background: rgba(104,210,223,0.12);
     border-bottom-color: var(--teal);
+  }
+
+  /* ── PAST SHOWCASES DROPDOWN ── */
+  .nav-dropdown { position: relative; height: 64px; display: flex; align-items: center; }
+  .nav-dropdown-btn {
+    color: rgba(255,255,255,0.7);
+    font-size: 13px; font-weight: 500;
+    padding: 0 13px; height: 64px;
+    display: flex; align-items: center; gap: 5px;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -3px;
+    background: none; border-top: none; border-left: none; border-right: none;
+    cursor: pointer; font-family: 'Source Sans 3', sans-serif;
+    transition: color 0.2s, background 0.2s;
+  }
+  .nav-dropdown-btn:hover {
+    color: var(--white);
+    background: rgba(104,210,223,0.12);
+    border-bottom-color: var(--teal);
+  }
+  .nav-dropdown-btn svg { opacity: 0.6; }
+  .nav-dropdown-menu {
+    display: none;
+    position: absolute; top: 64px; right: 0;
+    background: var(--navy-dark);
+    border: 1px solid rgba(104,210,223,0.2);
+    border-radius: 0 0 8px 8px;
+    min-width: 180px;
+    z-index: 200;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+  .nav-dropdown-menu a {
+    display: block; height: auto;
+    padding: 10px 16px;
+    font-size: 13px; color: rgba(255,255,255,0.7);
+    text-decoration: none; border-bottom: none; margin-bottom: 0;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .nav-dropdown-menu a:hover {
+    background: rgba(104,210,223,0.12);
+    color: var(--white);
+    border-bottom: none;
+  }
+  .nav-dropdown-menu .no-archives {
+    display: block; padding: 10px 16px;
+    font-size: 12px; color: rgba(255,255,255,0.35);
+    font-style: italic;
   }
 
   /* ── HERO ── */
@@ -323,9 +372,21 @@
     </div>
     <nav>
       <a href="#" class="active" onclick="filterGrade('all',this);return false;">All Projects</a>
-      <a href="#" onclick="filterGrade('Early Years',this);return false;">PreK–2</a>
-      <a href="#" onclick="filterGrade('Lower School',this);return false;">Grades 3–5</a>
-      <a href="#" onclick="filterGrade('Middle School',this);return false;">Grades 6–8</a>
+      <a href="#" onclick="filterGrade('Early Years',this);return false;">PreK&ndash;2</a>
+      <a href="#" onclick="filterGrade('Lower School',this);return false;">Grades 3&ndash;5</a>
+      <a href="#" onclick="filterGrade('Middle School',this);return false;">Grades 6&ndash;8</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">
+          Past Showcases
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 4l3 3 3-3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu">
+          <!-- Add past year links here when archiving, e.g.:
+          <a href="./2025-26/index.html">2025&ndash;26 Showcase</a>
+          -->
+          <span class="no-archives">No past showcases yet</span>
+        </div>
+      </div>
     </nav>
   </div>
 </header>
