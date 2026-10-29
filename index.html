@@ -370,30 +370,16 @@
       <div class="logo-divider"></div>
       <span class="logo-section">Technology Integration Showcase</span>
     </div>
-    <nav>
-      <a href="#" class="active" onclick="filterGrade('all',this);return false;">All Projects</a>
-      <a href="#" onclick="filterGrade('Early Years',this);return false;">PreK&ndash;2</a>
-      <a href="#" onclick="filterGrade('Lower School',this);return false;">Grades 3&ndash;5</a>
-      <a href="#" onclick="filterGrade('Middle School',this);return false;">Grades 6&ndash;8</a>
-      <div class="nav-dropdown">
-        <button class="nav-dropdown-btn">
-          Past Showcases
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 4l3 3 3-3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="nav-dropdown-menu">
-          <!-- Add past year links here when archiving, e.g.:
-          <a href="./2025-26/index.html">2025&ndash;26 Showcase</a>
-          -->
-          <span class="no-archives">No past showcases yet</span>
-        </div>
-      </div>
+    <nav aria-label="Showcase school years">
+      <a href="https://saintandrews-tech.github.io/2025-26/">2025&ndash;26</a>
+      <a href="https://saintandrews-tech.github.io/tech-showcase/" class="active" aria-current="page">2026&ndash;27</a>
     </nav>
   </div>
 </header>
 
 <section class="hero">
   <h1>Learning Through <em>Technology</em></h1>
-  <p class="hero-sub">Explore how our teachers integrate technology as a creative and collaborative tool across every subject and grade level — from PreK through 8th grade.</p>
+  <p class="hero-sub">Explore how our teachers integrate technology as a creative and collaborative tool across every subject and grade level, from PreK through 8th grade.</p>
   <div class="hero-stats">
     <div class="hero-stat">
       <span class="hero-stat-num">PreK–8</span>
@@ -429,7 +415,7 @@
     <div class="programs-grid">
       <div class="program-card">
         <div class="program-name">ISTE &amp; CSTA Standards</div>
-        <p class="program-desc"><strong style="color:#a8c8ff;">ISTE Student Standards</strong> define the skills students need to thrive as digital learners and global collaborators — from creative communicator to computational thinker. <strong style="color:#ffc72c;">CSTA K–12 CS Standards</strong> provide a framework for computer science concepts and practices across all grade levels, from algorithmic thinking in early grades to data analysis and programming in middle school.</p>
+        <p class="program-desc"><strong style="color:#a8c8ff;">ISTE Student Standards</strong> define the skills students need to thrive as digital learners and global collaborators, from creative communicator to computational thinker. <strong style="color:#ffc72c;">CSTA K–12 CS Standards</strong> provide a framework for computer science concepts and practices across all grade levels, from algorithmic thinking in early grades to data analysis and programming in middle school.</p>
         <span class="program-grades">All projects aligned to ISTE &amp; CSTA · PreK–8</span>
       </div>
     </div>
@@ -450,7 +436,7 @@
 
 <script>
 // ── LIVE DATA FROM GOOGLE SHEETS ─────────────────────────────────────────────
-var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwg4lxMBVQ5U4TXpW0h_v9QWmcqqGveRLDJaTSzs3zVXFFtlzzG5E8Y5U_Yp3-EFz1kog/exec';
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqgcUx3KIWEolqpLZ1FZHC39s3yHZrP5eTGwLpIAhIqgelPjWQyaaGuN3NFYk6ckMfAw/exec';
 
 var PROJECTS = [];
 
@@ -459,7 +445,7 @@ function loadProjects() {
   list.innerHTML = '<div class="empty-state" style="color:var(--text-muted);">Loading projects...</div>';
 
   // ── FIX 1: Cache-busting parameter forces a fresh fetch every time ──
-  fetch(APPS_SCRIPT_URL + '?t=' + Date.now())
+  fetch(APPS_SCRIPT_URL + '?site=showcase&t=' + Date.now())
     .then(function(r) { return r.json(); })
     .then(function(data) {
       PROJECTS = data;
@@ -467,7 +453,7 @@ function loadProjects() {
     })
     .catch(function(err) {
       console.error('Could not load projects:', err);
-      list.innerHTML = '<div class="empty-state">Could not load projects. Check the Apps Script URL.</div>';
+      list.innerHTML = '<div class="empty-state">Could not load projects. Please refresh the page or try again later.</div>';
     });
 }
 
@@ -483,7 +469,6 @@ let activeGrade = 'all';
 function filterGrade(grade, btn) {
   activeGrade = grade;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
   if (btn) btn.classList.add('active');
   document.getElementById('programs-section').style.display = (grade === 'all') ? 'block' : 'none';
   renderProjects();
@@ -491,7 +476,8 @@ function filterGrade(grade, btn) {
 
 function matchesGrade(p, grade) {
   if (grade === 'all') return true;
-  if (GRADE_GROUPS[grade]) return p.gradeGroup === grade;
+  if (GRADE_GROUPS[grade]) return GRADE_GROUPS[grade].indexOf(p.grade) !== -1;
+  if (grade === 'PreK') return p.grade === 'PreK' || p.grade === 'TK';
   var g = p.grade.toLowerCase();
   var target = grade.toLowerCase().replace(' grade', '').trim();
   return g.indexOf(target) !== -1;
@@ -523,23 +509,6 @@ function expandCsta(s) {
 function driveUrl(url) {
   var m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
   if (m) return 'https://lh3.googleusercontent.com/d/' + m[1];
-  return url;
-}
-
-// ── Convert Google Slides and YouTube URLs to embeddable versions ──
-function toEmbedUrl(url) {
-  if (!url) return url;
-
-  // Google Slides: convert to /embed
-  if (url.includes('docs.google.com/presentation')) {
-    var slidesMatch = url.match(/(https:\/\/docs\.google\.com\/presentation\/d\/[a-zA-Z0-9_-]+)/);
-    if (slidesMatch) return slidesMatch[1] + '/embed?start=false&loop=false&delayms=3000';
-  }
-
-  // YouTube: youtu.be/ID or youtube.com/watch?v=ID → embed
-  var ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/))([a-zA-Z0-9_-]{11})/);
-  if (ytMatch) return 'https://www.youtube.com/embed/' + ytMatch[1];
-
   return url;
 }
 
@@ -580,54 +549,49 @@ function renderProjects() {
 loadProjects();
 </script>
 
-<!-- ── MODAL ── -->
+<!-- ── PROJECT LINKS POPUP ── -->
 <div id="project-modal" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(20,27,77,0.55); backdrop-filter:blur(3px); align-items:center; justify-content:center;">
-  <div style="background:#fff; border-radius:14px; width:92%; max-width:680px; box-shadow:0 20px 60px rgba(20,27,77,0.25); overflow:hidden; position:relative;">
+  <div style="background:#fff; border-radius:14px; width:92%; max-width:480px; box-shadow:0 20px 60px rgba(20,27,77,0.25); overflow:hidden; position:relative;">
     <div id="modal-header" style="padding:20px 24px 16px; border-bottom:1px solid #ddeaec;">
-      <button onclick="closeModal()" style="position:absolute; top:14px; right:16px; background:none; border:none; font-size:20px; cursor:pointer; color:#90adb2; line-height:1;">✕</button>
+      <button onclick="closeModal()" aria-label="Close" style="position:absolute; top:14px; right:16px; background:none; border:none; font-size:20px; cursor:pointer; color:#90adb2; line-height:1;">✕</button>
       <div id="modal-subject" style="font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#3db8c6; margin-bottom:5px;"></div>
       <div id="modal-grade" style="font-size:12px; color:#4a6570; margin-bottom:6px;"></div>
       <div id="modal-title" style="font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:600; color:#141b4d; line-height:1.3;"></div>
     </div>
-    <div id="modal-links" style="padding:12px 24px 8px; display:flex; flex-direction:column; gap:8px;"></div>
+    <div id="modal-links" style="padding:12px 24px 20px; display:flex; flex-direction:column; gap:8px;"></div>
     <div id="modal-no-links" style="padding:16px 24px 20px; display:none; font-size:13px; color:#90adb2; font-style:italic;">No project links added yet.</div>
-    <div id="modal-frame-wrap" style="display:none; padding:0 24px 20px;">
-      <iframe id="modal-frame" style="width:100%; height:400px; border:1px solid #ddeaec; border-radius:8px;" src="" allowfullscreen></iframe>
-    </div>
   </div>
 </div>
 
 <script>
 function openModal(p) {
+  if (!p) return;
   document.getElementById('modal-subject').textContent = p.subject;
   document.getElementById('modal-grade').textContent = p.grade;
   document.getElementById('modal-title').textContent = p.title;
-  const linksEl = document.getElementById('modal-links');
-  const noLinks = document.getElementById('modal-no-links');
+  var linksEl = document.getElementById('modal-links');
+  var noLinks = document.getElementById('modal-no-links');
   linksEl.innerHTML = '';
   if (p.links && p.links.length > 0) {
     linksEl.style.display = 'flex';
     noLinks.style.display = 'none';
     p.links.forEach(function(lnk) {
-      const a = document.createElement('a');
+      var a = document.createElement('a');
       a.href = lnk.url;
       a.style.cssText = 'display:flex; align-items:center; gap:10px; padding:10px 14px; background:#f2f7f8; border-radius:8px; text-decoration:none; color:#141b4d; font-size:13px; font-weight:500; border:1px solid #ddeaec; transition:background 0.15s; cursor:pointer;';
-      a.onmouseenter = function(){ this.style.background='#ddeaec'; };
-      a.onmouseleave = function(){ this.style.background='#f2f7f8'; };
-      a.innerHTML = '<svg width="14" height="14" viewBox="0 0 12 12" fill="none" stroke="#3db8c6" stroke-width="1.5"><path d="M2 10L10 2M4 2h6v6"/></svg>' + lnk.label;
+      a.onmouseenter = function() { this.style.background = '#ddeaec'; };
+      a.onmouseleave = function() { this.style.background = '#f2f7f8'; };
+      a.innerHTML = '<svg width="14" height="14" viewBox="0 0 12 12" fill="none" stroke="#3db8c6" stroke-width="1.5"><path d="M2 10L10 2M4 2h6v6"/></svg>';
+      a.appendChild(document.createTextNode(lnk.label));
       (function(url) {
         a.addEventListener('click', function(e) {
           e.preventDefault();
-          var frame = document.getElementById('modal-frame');
-          var wrap = document.getElementById('modal-frame-wrap');
-          // ── FIX 2 applied here: use embed URL for Google Slides ──
-          frame.src = toEmbedUrl(url);
-          wrap.style.display = 'block';
-          // Highlight active link
-          var allLinks = linksEl.querySelectorAll('a');
-          allLinks.forEach(function(l){ l.style.background='#f2f7f8'; l.style.borderColor='#ddeaec'; });
-          this.style.background='#ddeaec';
-          this.style.borderColor='#3db8c6';
+          // Opens in a window at 75% of the screen, centered
+          var w = Math.round(window.screen.width * 0.75);
+          var h = Math.round(window.screen.height * 0.75);
+          var left = Math.round((window.screen.width - w) / 2);
+          var top = Math.round((window.screen.height - h) / 2);
+          window.open(url, '_blank', 'width=' + w + ',height=' + h + ',left=' + left + ',top=' + top + ',resizable=yes,scrollbars=yes');
         });
       })(lnk.url);
       linksEl.appendChild(a);
@@ -636,14 +600,11 @@ function openModal(p) {
     linksEl.style.display = 'none';
     noLinks.style.display = 'block';
   }
-  const modal = document.getElementById('project-modal');
-  modal.style.display = 'flex';
+  document.getElementById('project-modal').style.display = 'flex';
 }
 
 function closeModal() {
   document.getElementById('project-modal').style.display = 'none';
-  document.getElementById('modal-frame').src = '';
-  document.getElementById('modal-frame-wrap').style.display = 'none';
 }
 
 document.getElementById('project-modal').addEventListener('click', function(e) {
