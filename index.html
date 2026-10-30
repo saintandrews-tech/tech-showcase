@@ -484,12 +484,17 @@ function matchesGrade(p, grade) {
 }
 
 function expandIste(s) {
-  var m = s.match(/\(([^)]+)\)/);
-  if (m) {
-    return m[1].split(/,\s*/).map(function(code) { return 'ISTE ' + code.trim(); });
+  // Takes one string or a list of fragments and reads every "Strand (1.4a, 1.4b)" group, not just the first.
+  var text = Array.isArray(s) ? s.join(', ') : String(s || '');
+  var codes = [];
+  var re = /\(([^)]+)\)/g, m;
+  while ((m = re.exec(text)) !== null) {
+    m[1].split(/,\s*/).forEach(function(c) { if (c.trim()) codes.push('ISTE ' + c.trim()); });
   }
-  var bare = s.replace(/^ISTE\s*/i, '').trim();
-  return bare.split(/,\s*/).map(function(code) { return 'ISTE ' + code.trim(); });
+  if (codes.length === 0) {
+    text.replace(/^ISTE\s*/i, '').split(/,\s*/).forEach(function(c) { if (c.trim()) codes.push('ISTE ' + c.trim()); });
+  }
+  return codes.filter(function(c, i) { return codes.indexOf(c) === i; });
 }
 
 function shortCsta(s) {
@@ -537,7 +542,7 @@ function renderProjects() {
           <div class="row-title">${p.title}</div>
           <div class="row-description">${p.description}</div>
           <div class="row-tags">
-            ${p.iste.flatMap(s => expandIste(s)).map(code => `<span class="std-tag std-iste">${code}</span>`).join('')}
+            ${expandIste(p.iste).map(code => `<span class="std-tag std-iste">${code}</span>`).join('')}
             ${p.csta.flatMap(s => expandCsta(s)).map(code => `<span class="std-tag std-csta">${code}</span>`).join('')}
           </div>
         </div>
